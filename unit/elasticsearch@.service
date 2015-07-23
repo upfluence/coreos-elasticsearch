@@ -1,0 +1,29 @@
+[Unit]
+Description=Elasticsearch
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+User=core
+EnvironmentFile=/etc/environment
+ExecStartPre=-/usr/bin/docker kill es-node-%i
+ExecStartPre=-/usr/bin/docker rm es-node-%i
+ExecStartPre=/usr/bin/docker pull upfluence/elasticsearch:latest
+
+ExecStart=/bin/sh -c "/usr/bin/docker run --rm \
+            --name es-node-%i \
+            -e HOST_IP=${COREOS_PRIVATE_IPV4} \
+            -e ES_NODE_NAME=es-node-%i \
+            -e ES_CLUSTER_NAME=elasticsearch-upfluence \
+            -e ES_NODES=`etcdctl ls /discovery/elasticsearch | xargs -r -L1  etcdctl get | xargs -I {} echo {}:9300 | xargs | sed 's/ /,/g'` \
+            -v /var/elasticsearch:/data \
+            -p 9200:9200 -p 9300:9300/udp -p 9300:9300/tcp \
+            upfluence/elasticsearch:latest"
+
+ExecStartPost=/usr/bin/etcdctl set /discovery/elasticsearch/es-node-%i "${COREOS_PRIVATE_IPV4}"
+
+ExecStop=-/usr/bin/etcdctl rm /discovery/elasticsearch/es-node-%i
+ExecStop=-/usr/bin/docker kill es-node-%i
+
+[X-Fleet]
+Conflicts=elasticsearch@*
