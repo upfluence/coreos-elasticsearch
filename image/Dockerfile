@@ -1,4 +1,4 @@
-FROM gliderlabs/alpine
+FROM debian:jessie
 MAINTAINER Julien Levesy <julien.levesy@upfluence.co>
 
 ENV ENVTMPL_VERSION 0.0.1
@@ -6,8 +6,9 @@ ADD https://github.com/upfluence/envtmpl/releases/download/v$ENVTMPL_VERSION/env
   /usr/bin/envtmpl
 RUN chmod +x /usr/bin/envtmpl
 
-RUN apk add --update \
-  openjdk7-jre
+RUN apt-get update && \
+  apt-get install -y ca-certificates-java openjdk-7-jre && \
+  apt-get clean -y
 
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
