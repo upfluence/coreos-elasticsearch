@@ -1,0 +1,35 @@
+path:
+  data: /data/data
+  logs: /data/log
+  work: /data/work
+
+script.disable_dynamic: false
+
+{{if .LOCAL_ENV}}
+{{else}}
+#network setup
+transport.bind_host: 0.0.0.0
+transport.publish_host: {{.HOST_IP}}
+http.bind_host: 0.0.0.0
+http.publish_host: {{.HOST_IP}}
+
+#discovery setup
+discovery.zen.minimum_master_nodes: 2
+discovery.zen.ping.multicast.enabled: false
+discovery.zen.ping.unicast:
+  hosts: "{{.ES_NODES}}"
+
+#cluster setup
+cluster:
+  name: {{.ES_CLUSTER_NAME}}
+node:
+  name: {{.ES_NODE_NAME}}
+
+#cluster recovery setup
+gateway:
+  recover_after_nodes: 2
+  expected_nodes: 3
+  recover_after_time: 5m
+{{end}}
+
+http.max_content_length: 500mb
