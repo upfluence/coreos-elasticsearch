@@ -1,3 +1,3 @@
 #! /bin/sh
-/usr/bin/envtmpl -i /elasticsearch/config/elasticsearch.yml.tmpl -o /elasticsearch/config/elasticsearch.yml
+/usr/bin/envtmpl -i ${ES_HOME}/config/elasticsearch.yml.tmpl -o ${ES_HOME}/config/elasticsearch.yml
 /elasticsearch/bin/elasticsearch

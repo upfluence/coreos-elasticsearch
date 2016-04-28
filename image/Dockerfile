@@ -1,40 +1,28 @@
-FROM debian:jessie
-MAINTAINER Julien Levesy <julien.levesy@upfluence.co>
+FROM alpine:3.3
+MAINTAINER Julien Levesy <julien@upfluence.co>
 
 ENV ENVTMPL_VERSION 0.0.1
-ADD https://github.com/upfluence/envtmpl/releases/download/v$ENVTMPL_VERSION/envtmpl-linux-amd64-$ENVTMPL_VERSION \
-  /usr/bin/envtmpl
-RUN chmod +x /usr/bin/envtmpl
+ENV ES_VERSION=2.3.2 ES_HOME=/usr/share/elasticsearch
 
-RUN apt-get update && \
-  apt-get install -y ca-certificates-java openjdk-7-jre && \
-  apt-get clean -y
+ENV COMMUNITY_REPO=http://nl.alpinelinux.org/alpine/edge/community
+ENV ENVTPL_REPO=https://github.com/upfluence/envtmpl/releases/download/v${ENVTMPL_VERSION}/envtmpl-linux-amd64-${ENVMTPL_VERSION}
+ENV ES_REPO=https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.tar.gz
 
-ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 
-ENV ES_VERSION 1.7.0
+RUN echo "@community ${COMMUNITY_REPO}" >> /etc/apk/repositories && \
+    apk add --update openjdk8@community curl && \
+    rm -rf /var/cache/apk/* && \
+    curl ${ENVTPL_REPO} > /usr/bin/envtmpl && \
+    chmod +x /usr/bin/envtmpl && \
+    curl -s ${ES_REPO} | tar zx -C /usr/share && \
+    ln -s ${ES_HOME}-${ES_VERSION} ${ES_HOME} && \
+    ${ES_HOME}/bin/plugin install --verbose cloud-aws && \
+    rm ${ES_HOME}/config/elasticsearch.yml
 
-ADD https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_VERSION.tar.gz \
-  /tmp/elasticsearch.tar.gz
-
-WORKDIR /tmp
-
-RUN tar xvzf elasticsearch.tar.gz && \
-    mv elasticsearch-$ES_VERSION /elasticsearch && \
-    rm /elasticsearch/config/elasticsearch.yml
-
-WORKDIR /
-
-ADD config/elasticsearch.yml.tmpl /elasticsearch/config/elasticsearch.yml.tmpl
-ADD run.sh /elasticsearch/run.sh
-RUN chmod +x /elasticsearch/run.sh
+ADD config/elasticsearch.yml.tmpl /usr/share/elasticsearch/config/elasticsearch.yml.tmpl
+ADD run.sh /usr/share/elasticsearch/run.sh
+RUN chmod +x /usr/share/elasticsearch/run.sh
 
 VOLUME ["/data"]
 
-ENV ES_HOME /elasticsearch
-
-ENV ES_AWS_VERSION 2.7.0
-
-RUN /elasticsearch/bin/plugin install elasticsearch/elasticsearch-cloud-aws/$ES_AWS_VERSION
-
-CMD ["/elasticsearch/run.sh"]
+CMD ["/usr/share/elasticsearch/run.sh"]
