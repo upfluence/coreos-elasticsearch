@@ -5,14 +5,14 @@ ENV ENVTMPL_VERSION 0.0.1
 ENV ES_VERSION=2.3.2 ES_HOME=/usr/share/elasticsearch
 
 ENV COMMUNITY_REPO=http://nl.alpinelinux.org/alpine/edge/community
-ENV ENVTPL_REPO=https://github.com/upfluence/envtmpl/releases/download/v${ENVTMPL_VERSION}/envtmpl-linux-amd64-${ENVMTPL_VERSION}
+ENV ENVTPL_REPO=https://github.com/upfluence/envtmpl/releases/download/v${ENVTMPL_VERSION}/envtmpl-linux-amd64-${ENVTMPL_VERSION}
 ENV ES_REPO=https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.tar.gz
 
 
 RUN echo "@community ${COMMUNITY_REPO}" >> /etc/apk/repositories && \
     apk add --update openjdk8@community curl && \
     rm -rf /var/cache/apk/* && \
-    curl ${ENVTPL_REPO} > /usr/bin/envtmpl && \
+    curl -sL ${ENVTPL_REPO} > /usr/bin/envtmpl && \
     chmod +x /usr/bin/envtmpl && \
     curl -s ${ES_REPO} | tar zx -C /usr/share && \
     ln -s ${ES_HOME}-${ES_VERSION} ${ES_HOME} && \
