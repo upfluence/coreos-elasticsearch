@@ -10,19 +10,24 @@ ENV ES_REPO=https://download.elastic.co/elasticsearch/release/org/elasticsearch/
 
 
 RUN echo "@community ${COMMUNITY_REPO}" >> /etc/apk/repositories && \
-    apk add --update openjdk8@community curl && \
+    apk add --update openjdk8@community curl su-exec && \
     rm -rf /var/cache/apk/* && \
     curl -sL ${ENVTPL_REPO} > /usr/bin/envtmpl && \
     chmod +x /usr/bin/envtmpl && \
     curl -s ${ES_REPO} | tar zx -C /usr/share && \
     ln -s ${ES_HOME}-${ES_VERSION} ${ES_HOME} && \
     ${ES_HOME}/bin/plugin install --verbose cloud-aws && \
-    rm ${ES_HOME}/config/elasticsearch.yml
+    rm ${ES_HOME}/config/elasticsearch.yml && \
+    addgroup elasticsearch && adduser -D -H -G elasticsearch elasticsearch && \
+    chown -R -L elasticsearch:elasticsearch ${ES_HOME}
 
 ADD config/elasticsearch.yml.tmpl /usr/share/elasticsearch/config/elasticsearch.yml.tmpl
 ADD run.sh /usr/share/elasticsearch/run.sh
 RUN chmod +x /usr/share/elasticsearch/run.sh
 
 VOLUME ["/data"]
+
+EXPOSE 9200
+EXPOSE 9300
 
 CMD ["/usr/share/elasticsearch/run.sh"]
