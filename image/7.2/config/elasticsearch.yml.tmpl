@@ -7,15 +7,15 @@ discovery.type: single-node
 network.host: 0.0.0.0
 {{else}}
 #network setup
+network.host: {{.HOST_IP}}
 transport.bind_host: 0.0.0.0
 transport.publish_host: {{.HOST_IP}}
 http.bind_host: 0.0.0.0
 http.publish_host: {{.HOST_IP}}
 
 #discovery setup
-discovery.zen.minimum_master_nodes: 2
-discovery.zen.ping.unicast:
-  hosts: "{{.ES_NODES}}"
+discovery.seed_hosts: "{{.ES_NODES}}"
+cluster.initial_master_nodes: "{{.ES_MASTER_NODES}}"
 
 #cluster setup
 cluster:
