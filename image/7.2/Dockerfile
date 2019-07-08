@@ -11,6 +11,8 @@ COPY --chown=1000:0 run.sh /usr/local/bin/run.sh
 RUN chgrp 0 /usr/local/bin/run.sh && \
     chmod 0775 /usr/local/bin/run.sh
 
+RUN elasticsearch-plugin install --batch repository-s3
+
 ENTRYPOINT ["/usr/local/bin/run.sh"]
 # Dummy overridable parameter parsed by entrypoint
 CMD ["eswrapper"]
