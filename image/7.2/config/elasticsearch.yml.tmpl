@@ -17,6 +17,9 @@ http.publish_host: {{.HOST_IP}}
 discovery.seed_hosts: "{{.ES_NODES}}"
 cluster.initial_master_nodes: "{{.ES_MASTER_NODES}}"
 
+# Indices setup
+indices.query.bool.max_clause_count: {{.ES_MAX_CLAUSE_COUNT}}
+
 #cluster setup
 cluster:
   name: {{.ES_CLUSTER_NAME}}
