@@ -1,6 +1,8 @@
 FROM docker.elastic.co/elasticsearch/elasticsearch:7.2.1
 
 ENV ENVTMPL_VERSION 0.0.1
+ENV ES_MAX_CLAUSE_COUNT 1024
+
 ADD https://github.com/upfluence/envtmpl/releases/download/v$ENVTMPL_VERSION/envtmpl-linux-amd64-$ENVTMPL_VERSION \
   /usr/bin/envtmpl
 RUN chmod +x /usr/bin/envtmpl
