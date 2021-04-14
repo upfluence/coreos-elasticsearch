@@ -1,4 +1,4 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:7.2.1
+FROM docker.elastic.co/elasticsearch/elasticsearch:{{.ES_VERSION}}
 
 ENV ENVTMPL_VERSION 0.0.1
 ENV ES_MAX_CLAUSE_COUNT 1024
