@@ -16,6 +16,9 @@ transport.publish_host: {{.HOST_IP}}
 http.bind_host: 0.0.0.0
 http.publish_host: {{.HOST_IP}}
 
+# Disable geoip
+ingest.geoip.downloader.enabled: false
+
 #discovery setup
 discovery.seed_hosts: "{{.ES_NODES}}"
 cluster.initial_master_nodes: "{{.ES_MASTER_NODES}}"
