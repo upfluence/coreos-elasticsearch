@@ -1,7 +1,7 @@
 .PHONY: build deploy
 
 .EXPORT_ALL_VARIABLES:
-ES_VERSION := 7.12.0
+ES_VERSION := 7.17.17
 
 build:
 	envtmpl -i Dockerfile.tmpl -o Dockerfile && \
