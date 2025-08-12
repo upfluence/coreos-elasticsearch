@@ -1,4 +1,4 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:{{.ES_VERSION}}
+FROM upfluence/elasticsearch:{{.ES_VERSION}}-base
 
 ENV ENVTMPL_VERSION 0.0.1
 
@@ -15,7 +15,6 @@ RUN chgrp 0 /usr/bin/envtmpl && \
     chmod 0775 /usr/bin/envtmpl
 
 RUN bin/elasticsearch-keystore create
-RUN bin/elasticsearch-plugin install analysis-icu
 
 ENTRYPOINT ["/usr/local/bin/run.sh"]
 # Dummy overridable parameter parsed by entrypoint
