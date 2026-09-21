@@ -1,7 +1,7 @@
 .PHONY: build deploy
 
 .EXPORT_ALL_VARIABLES:
-ES_VERSION := 8.19.0
+ES_VERSION := 9.5.3
 
 build:
 	envtmpl -i base/Dockerfile.tmpl -o Dockerfile.base && \
