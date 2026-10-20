@@ -11,6 +11,6 @@ COPY --chown=1000:0 --chmod=0775 run.sh /usr/local/bin/run.sh
 
 RUN bin/elasticsearch-keystore create
 
-ENTRYPOINT ["/usr/local/bin/run.sh"]
+ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/run.sh"]
 # Dummy overridable parameter parsed by entrypoint
 CMD ["eswrapper"]

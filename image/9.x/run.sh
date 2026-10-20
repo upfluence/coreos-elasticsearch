@@ -5,4 +5,4 @@
 echo $AWS_ACCESS_KEY | /usr/share/elasticsearch/bin/elasticsearch-keystore add --stdin s3.client.default.access_key
 echo $AWS_SECRET_KEY | /usr/share/elasticsearch/bin/elasticsearch-keystore add --stdin s3.client.default.secret_key
 
-/usr/local/bin/docker-entrypoint.sh
+exec /usr/local/bin/docker-entrypoint.sh "$@"
