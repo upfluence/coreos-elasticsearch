@@ -4,7 +4,7 @@ Snapshots are managed by SLM (snapshot lifecycle management). The policy and
 the retention schedule live in the cluster state: configure them once through
 the API, they are kept across restarts and upgrades.
 
-- Register the S3 repository (credentials come from the keystore, see `run.sh`)
+- Register the S3 repository (credentials come from the EC2 instance profile, `ec2-core`)
 ```bash
 curl -XPUT -H 'Content-Type: application/json' 'http://localhost:9200/_snapshot/s3_backup' -d '{"type": "s3", "settings": { "bucket": "bucket_name"}}'
 ```
