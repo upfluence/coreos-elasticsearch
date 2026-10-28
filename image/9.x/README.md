@@ -1,3 +1,11 @@
+### Bootstrapping a new cluster
+
+`cluster.initial_master_nodes` is not set: nodes join the existing cluster from
+their on-disk state and `discovery.seed_hosts`. To form a brand-new cluster,
+start the first master-eligible nodes once with
+`-e cluster.initial_master_nodes=elasticsearch-0,elasticsearch-1,elasticsearch-2`,
+then restart them without it once the cluster has formed.
+
 ### Snapshots
 
 Snapshots are managed by SLM (snapshot lifecycle management). The policy and
