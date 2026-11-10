@@ -1,6 +1,6 @@
 .PHONY: build deploy
 
-ES_VERSION := 9.5.5
+ES_VERSION := 9.5.6
 
 build:
 	docker build --build-arg ES_VERSION=$(ES_VERSION) -t upfluence/elasticsearch:$(ES_VERSION)-base base && \
